@@ -1,0 +1,41 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# =============================================
+# ফেসবুক ভিডিও ডাউনলোডার (fbdl) - তোমার জন্য বানানো
+# =============================================
+
+clear
+echo "=========================================="
+echo "   🔥 Facebook Video Downloader (fbdl) 🔥"
+echo "=========================================="
+echo ""
+
+url="$1"
+
+if [ -z "$url" ]; then
+    echo "কোনো লিংক পাইনি! Facebook অ্যাপ থেকে Share করে আসো।"
+    read -p "ম্যানুয়ালি লিংক দাও: " url
+fi
+
+echo "🔗 লিংক: $url"
+echo "📥 ডাউনলোড শুরু হচ্ছে..."
+
+# কোয়ালিটি মেনু
+echo ""
+echo "1) সেরা কোয়ালিটি (HD + অডিও)"
+echo "2) শুধু ভিডিও (HD)"
+echo "3) শুধু অডিও (MP3)"
+echo "4) লো কোয়ালিটি (ফাস্ট ডাউনলোড)"
+echo ""
+read -p "অপশন সিলেক্ট করো (1-4): " choice
+
+case $choice in
+    1) yt-dlp -f "bestvideo+bestaudio/best" --merge-output-format mp4 --no-warnings -o "/sdcard/Download/%(title)s.%(ext)s" "$url" ;;
+    2) yt-dlp -f "bestvideo" --merge-output-format mp4 --no-warnings -o "/sdcard/Download/%(title)s.%(ext)s" "$url" ;;
+    3) yt-dlp -f "bestaudio" --extract-audio --audio-format mp3 --no-warnings -o "/sdcard/Download/%(title)s.%(ext)s" "$url" ;;
+    4) yt-dlp -f "worstvideo+bestaudio" --merge-output-format mp4 --no-warnings -o "/sdcard/Download/%(title)s.%(ext)s" "$url" ;;
+    *) echo "ভুল অপশন! ডিফল্ট HD ডাউনলোড হচ্ছে..." && yt-dlp -f "bestvideo+bestaudio/best" --merge-output-format mp4 --no-warnings -o "/sdcard/Download/%(title)s.%(ext)s" "$url" ;;
+esac
+
+echo ""
+echo "✅ ডাউনলোড শেষ! ফাইল পাবে → /sdcard/Download ফোল্ডারে"
+echo "=========================================="
